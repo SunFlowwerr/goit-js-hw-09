@@ -17,32 +17,33 @@ function createPromise(position, delay) {
 form.addEventListener('submit', func => {
   func.preventDefault();
 
+  const form = func.currentTarget;
   let delay = +form['delay'].value;
   const step = +form['step'].value;
   const amount = +form['amount'].value;
-  let position = 0;
+  let position = 1;
 
-  for (let i = 1; i <= amount; i += 1) {
-    position = 1;
+  for (let i = position; i <= amount; i += 1) {
+    position = i;
 
-    const firstDelay = delay;
-    let tempDelay = firstDelay + step;
-
-    createPromise(position, firstDelay, tempDelay)
-      .then(({ position, tempDelay }) => {
+    createPromise(position, delay)
+      .then(({ position, delay }) => {
         setTimeout(() => {
           Notiflix.Notify.success(
-            `✅ Fulfilled promise ${position} in ${tempDelay}ms`
+            `✅ Fulfilled promise ${position} in ${delay}ms`
           );
-        }, tempDelay);
+        }, delay);
       })
 
-      .catch(({ position, tempDelay }) => {
+      .catch(({ position, delay }) => {
         setTimeout(() => {
           Notiflix.Notify.warning(
-            `❌ Rejected promise ${position} in ${tempDelay}ms`
+            `❌ Rejected promise ${position} in ${delay}ms`
           );
-        }, tempDelay);
+        }, delay);
       });
+
+    delay += step;
+    console.log(delay);
   }
 });
